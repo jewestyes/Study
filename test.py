@@ -13,7 +13,7 @@ from PyQt5.QtGui import QIntValidator
 from interface import Ui_MainWindow
 
 def show_luminance_in_section(path=None, name=None):
-    y1, y2, x1, x2 = 0, 9, 0, 9
+    y1, y2, x1, x2 = 0, 10, 0, 10
     img = cv2.imread(path, 1)
     # y2 = img.shape[0]
     # x2 = img.shape[1]
@@ -36,16 +36,11 @@ def show_luminance_in_section(path=None, name=None):
         x.append(i)
     
     poly = lagrandge(x, values)
-    print(poly)
 
-    polinome = []
-    for i in range(len(poly)):
-        #print(poly[i])
-        polinome.append(values**i)
     pylab.figure(name)
     pylab.ylabel('Interpolating polynomial')
     pylab.xlabel('X axis')
-    pylab.plot(x, poly_reversed, color=name)
+    pylab.plot(x, poly[0], color=name)
 
     pylab.ylabel('Average Luminance')
     pylab.xlabel('X axis')
