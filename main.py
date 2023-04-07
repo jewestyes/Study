@@ -129,15 +129,20 @@ def show_luminance_in_section(path=None, name=None):
         print("The directory does not exist")
     lab = cv2.cvtColor(cropped, cv2.COLOR_BGR2LAB)
 
-    # cv2.imshow("lab", lab)
     l, a, b = cv2.split(lab)
+
+    # values = []
+    # for c in range(l.shape[1]):
+    #     count = 0
+    #     for r in range(l.shape[0]):
+    #         count += l[r][c]
+    #     values.append(1.0 * count / l.shape[0])
 
     values = []
     for c in range(l.shape[1]):
-        count = 0
-        for r in range(l.shape[0]):
-            count += l[r][c]
-        values.append(1.0 * count / l.shape[0])
+
+        values.append(1.0 * l.shape[0])
+
 
     pylab.figure(name)
     pylab.ylabel('Average Luminance')
