@@ -3,17 +3,18 @@ import os
 import pathlib
 import pylab
 import cv2
-
+import matplotlib.pyplot as plt
+from scipy.interpolate import lagrange
 from tkinter import *
 from tkinter.filedialog import askopenfilename
-from scipy.interpolate import lagrange
+from numpy.polynomial.polynomial import Polynomial
 from PIL import Image
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtGui import QIntValidator
 from interface import Ui_MainWindow
 
 def show_luminance_in_section(path=None, name=None):
-    y1, y2, x1, x2 = 0, 10, 0, 10
+    y1, y2, x1, x2 = 0, 5, 0, 5
     img = cv2.imread(path, 1)
     # y2 = img.shape[0]
     # x2 = img.shape[1]
@@ -21,7 +22,6 @@ def show_luminance_in_section(path=None, name=None):
     cropped = img[int(y1):int(y2), int(x1):int(x2)]
 
     lab = cv2.cvtColor(cropped, cv2.COLOR_BGR2LAB)
-
     l, a, b = cv2.split(lab)
 
     values = []
@@ -30,33 +30,28 @@ def show_luminance_in_section(path=None, name=None):
         for r in range(l.shape[0]):
             count += l[r][c]
         values.append(1.0 * count / l.shape[0])
-    x = []
-    for i in range(len(values)):
-        print(f"{i} {values[i]}")
-        x.append(i)
     
-    poly = lagrandge(x, values)
 
-    pylab.figure(name)
-    pylab.ylabel('Interpolating polynomial')
-    pylab.xlabel('X axis')
-    pylab.plot(x, poly[0], color=name)
+    x = []
+    for i in range(len(values)): x.append(i)
+    poly = lagrange(x, values)
 
-    pylab.ylabel('Average Luminance')
-    pylab.xlabel('X axis')
-    pylab.plot(values, color="Blue")
+    x_new = np.arange(0, len(x), 0.1)
+    res = []
+    reversed_poly = poly.coef[::-1]
 
-    pylab.show()
+    for i in range(len(reversed_poly) - 1):
+        res += i*reversed_poly[i]
+    
 
-
-def lagrandge(x, y):
-    # Интерполяционный многочлен Лагранжа
-    poly = lagrange(x, y)
-    poly_reversed = []
-    for co in reversed(range(len(poly) + 1)):
-        poly_reversed.append(poly[co])
-    return poly, poly_reversed
+    plt.scatter(x, values, label='data')
+    plt.plot(x_new, Polynomial(res, label='Polynomial'))
+    plt.plot(x, values,
+         label=r"$func$", linestyle='-.')
+    plt.legend()
+    plt.show()
+    
 
 
 if __name__ == "__main__":
-    show_luminance_in_section(rf"C:\Users\ggezj\PycharmProjects\Study\images\4.jpg", "Red")
+    show_luminance_in_section(rf"D:\Github\Study\1_compressed.jpg", "Red")
