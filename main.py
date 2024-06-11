@@ -1,17 +1,14 @@
 import os
 import pathlib
-
 import cv2
+import pylab
+
 from tkinter import *
 from tkinter.filedialog import askopenfilename
-
-import pylab
 from PIL import Image
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtGui import QIntValidator
-
 from interface import Ui_MainWindow
-
 
 def get_size_format(b, factor=1024, suffix="B"):
     for unit in ["", "K", "M", "G", "T", "P", "E", "Z"]:
@@ -131,18 +128,9 @@ def show_luminance_in_section(path=None, name=None):
 
     l, a, b = cv2.split(lab)
 
-    # values = []
-    # for c in range(l.shape[1]):
-    #     count = 0
-    #     for r in range(l.shape[0]):
-    #         count += l[r][c]
-    #     values.append(1.0 * count / l.shape[0])
-
     values = []
     for c in range(l.shape[1]):
-
         values.append(1.0 * l.shape[0])
-
 
     pylab.figure(name)
     pylab.ylabel('Average Luminance')
